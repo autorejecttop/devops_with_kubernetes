@@ -1,43 +1,7 @@
 # todo-app
 
-To install dependencies:
+Continuing from Exercise 1.2, I created a Dockerfile and publish them to Docker Hub, created the `manifests/deployment.yaml` file using the example shown on the course material, and then do:
 
 ```bash
-bun install
-```
-
-To run:
-
-```bash
-bun start
-```
-
-This project was created using `bun init` in bun v1.3.9. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
-
-## How I completed this exercise
-
-I initialized the project using:
-
-```bash
-bun init
-```
-
-Edited `package.json` to include the start script:
-
-```json
-{
-  // ...
-  "scripts": {
-    "start": "bun index.ts"
-  }
-  // ...
-}
-```
-
-Explicitly accessed the `PORT` environment variable in `index.ts` with 8080 as a default
-
-Ran the app using:
-
-```bash
-bun start
+kubectl apply -f manifests/deployment.yaml
 ```
