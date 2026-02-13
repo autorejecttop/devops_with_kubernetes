@@ -1,7 +1,9 @@
+import indexPage from "./index.html";
+
 const server = Bun.serve({
   port: process.env.PORT ?? 8080,
   routes: {
-    "/": new Response("OK"),
+    "/": indexPage,
   },
 });
 
