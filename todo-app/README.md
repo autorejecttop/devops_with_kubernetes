@@ -1,39 +1,23 @@
 # todo-app
 
-Continuing from Exercise 1.4:
+## Exercise 1.6
 
-Created `index.html` for a simple HTML page and integrate it with the server
+Continuing from exercise 1.5:
 
-Exposed PORT 3000 on the `Dockerfile` and built the image with tag `autorejecttop/todo-app:1.5` using
+I created the `service.yaml` file in the `manifests/` directory with `nodePort: 30081`
 
-```bash
-docker build -t autorejecttop/todo-app:1.5 .
-```
-
-Pushed the image to Docker hub using
+I deleted my running cluster and re-created it using:
 
 ```bash
-docker push autorejecttop/todo-app:1.5
+  k3d cluster create -p 8081:80@loadbalancer -p 8082:30080@agent:0 -p 8083:30081@agent:0 -a 2
 ```
 
-I then updated the image tag used on `manifests/deployment.yaml`, and added the PORT environment variable using:
-
-```yaml
-# ...
-image: # ...
-env:
-  - name: PORT
-    value: "3000"
-```
-
-I then deployed them using:
+I then ran:
 
 ```bash
-kubectl apply -f manifests/deployment.yaml
+  # ... <the deployment and service from the material>
+  kubectl apply -f ./manifests/deployment.yaml
+  kubectl apply -f ./manifests/service.yaml
 ```
 
-Lastly, I forwarded the port using:
-
-```bash
-kubectl port-forward todo-app-6cf5d559c9-49xcb 3003:3000
-```
+Lastly, I updated the exercise number in my `index.html` from 1.5 to 1.6
