@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: todo-app
-          image: autorejecttop/todo-app:1.5
+          image: autorejecttop/todo-app:1.8
           env:
             - name: PORT
               value: "3000"

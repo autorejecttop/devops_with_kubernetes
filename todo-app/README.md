@@ -1,23 +1,33 @@
 # todo-app
 
-## Exercise 1.6
+## Exercise 1.8
 
-Continuing from exercise 1.5:
+Continuing from exercise 1.6:
 
-I created the `service.yaml` file in the `manifests/` directory with `nodePort: 30081`
+I stopped the `log-output` app
 
-I deleted my running cluster and re-created it using:
+I modified the `index.html` file to update the exercise number from 1.5 to 1.8
+
+I then rebuild the docker image using:
 
 ```bash
-  k3d cluster create -p 8081:80@loadbalancer -p 8082:30080@agent:0 -p 8083:30081@agent:0 -a 2
+docker build -t autorejecttop/todo-app:1.8 .
 ```
+
+After that I push it using:
+
+```bash
+docker push autorejecttop/todo-app:1.8
+```
+
+I then modified the tag in `manifests/deployment.yaml` from 1.6 to 1.8
+
+Next, I changed the service so I get `type: ClusterIP`, removed the `nodePort: ...`, and removed the `name: http` to mimic the `manifests/service.yaml` on the course material
+
+After that, I created the `manifests/ingress.yaml` file just like the course material, but the port number on this one is `number: 1234`
 
 I then ran:
 
 ```bash
-  # ... <the deployment and service from the material>
-  kubectl apply -f ./manifests/deployment.yaml
-  kubectl apply -f ./manifests/service.yaml
+kubectl apply -f manifests/
 ```
-
-Lastly, I updated the exercise number in my `index.html` from 1.5 to 1.6
