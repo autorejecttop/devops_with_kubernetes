@@ -12,9 +12,22 @@ spec:
       labels:
         app: log-output
     spec:
-      containers:
+      volumes:
         - name: log-output
-          image: autorejecttop/log-output:1.7
+          emptyDir: {}
+      containers:
+        - name: log-output-generator
+          image: autorejecttop/log-output-generator:1.10
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: log-output
+              mountPath: /usr/src/app/files
+        - name: log-output-reader
+          image: autorejecttop/log-output-reader:1.10
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: log-output
+              mountPath: /usr/src/app/files
           env:
             - name: PORT
               value: "3000"

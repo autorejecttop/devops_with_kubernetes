@@ -1,30 +1,30 @@
 # Log Output App
 
-Continuing from Exercise 1.3:
+Continuing from Exercise 1.7:
 
-First, I modified the `index.js` to have an HTTP server where I used `express`
+I split the log generator and the http log reader into `generator/` and `reader/` respectively
 
-Next, I rebuilt the docker image using:
+I then modify each to work as intended in the exercise guide
 
-```bash
-docker -t autorejecttop/log-output:1.7 .
-```
-
-And then, I modified `manifests/deployment.yaml` to use `autorejecttop/log-output:1.7` and have an environment variable of `PORT: 3000`
-
-After that, I created `manifests/service.yaml` just like in the course material
-
-Next, I created `manifests/ingress.yaml` just like in the course material
-
-Before applying them, I decided to reset and recreate the cluster to stop the current NodePort service and because we only use port 80:
+Next, I built both of the docker image using:
 
 ```bash
-kubectl delete -f manifests/
-k3d cluster delete
-k3d cluster create -p 8081:80@loadbalancer -a 2
+docker -t autorejecttop/log-output-generator:1.10 generator/
+docker -t autorejecttop/log-output-reader:1.10 reader/
 ```
 
-Lastly, I deploy them using:
+I pushed it using:
+
+```bash
+docker push autorejecttop/log-output-generator:1.10
+docker push autorejecttop/log-output-reader:1.10
+```
+
+I then modified the `deployment.yaml` to use an emptyDir volume mount
+
+I added the `pullImagePolicy: Always` because I had a struggle trying to get the latest image working, now it always pulls the latest image
+
+I then ran:
 
 ```bash
 kubectl apply -f manifests/
