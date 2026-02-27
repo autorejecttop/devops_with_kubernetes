@@ -13,20 +13,21 @@ spec:
         app: log-output
     spec:
       volumes:
-        - name: log-output
-          emptyDir: {}
+        - name: log-and-ping-pv
+          persistentVolumeClaim:
+            claimName: log-and-ping-claim
       containers:
         - name: log-output-generator
-          image: autorejecttop/log-output-generator:1.10
+          image: autorejecttop/log-output-generator:1.11
           imagePullPolicy: Always
           volumeMounts:
-            - name: log-output
+            - name: log-and-ping-pv
               mountPath: /usr/src/app/files
         - name: log-output-reader
-          image: autorejecttop/log-output-reader:1.10
+          image: autorejecttop/log-output-reader:1.11
           imagePullPolicy: Always
           volumeMounts:
-            - name: log-output
+            - name: log-and-ping-pv
               mountPath: /usr/src/app/files
           env:
             - name: PORT

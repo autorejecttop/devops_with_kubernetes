@@ -15,10 +15,26 @@ function readLogOutputFileToString() {
   }
 }
 
+function readPingPongFileToString() {
+  try {
+    const data = readFileSync("files/ping-pong.txt");
+
+    return data.toString();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 app.get("/", (req, res) => {
   const logOutputFileContent = readLogOutputFileToString();
+  const pingPongFileContent = readPingPongFileToString();
 
-  res.send(logOutputFileContent);
+  const outputString =
+    logOutputFileContent +
+    "<br>" +
+    `Ping / Pongs: ${pingPongFileContent != "" ? pingPongFileContent : 0}`;
+
+  res.send(outputString);
 });
 
 app.listen(port, () => {

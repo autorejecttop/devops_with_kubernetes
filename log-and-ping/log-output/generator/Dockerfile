@@ -27,6 +27,7 @@ COPY --from=prerelease /usr/src/app/index.js .
 COPY --from=prerelease /usr/src/app/package.json .
 
 # run the app
-RUN chown -R node:node /usr/src/app
-USER node
+# TODO: Find a way to get persistent volumes working with non-root user
+# RUN chown -R node:node /usr/src/app
+# USER node
 ENTRYPOINT [ "npm", "start" ]

@@ -33,6 +33,8 @@ COPY --from=prerelease /usr/src/app/index.ts .
 COPY --from=prerelease /usr/src/app/package.json .
 
 # run the app
-USER bun
+# TODO: Find a way to get persistent volumes working with non-root user
+# USER bun
+
 EXPOSE 3000/tcp
 ENTRYPOINT [ "bun", "run", "index.ts" ]

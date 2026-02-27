@@ -1,6 +1,6 @@
 const crypto = require("crypto");
 const {
-  appendFileSync,
+  writeFileSync,
   readFileSync,
   existsSync,
   mkdirSync,
@@ -11,13 +11,13 @@ function createRandomStringWithTimestamp() {
   return `${new Date().toISOString()}: ${randomString}`;
 }
 
-function appendRandomStringToFile(randomString) {
+function writeRandomStringToFile(randomString) {
   if (!existsSync("files")) {
     mkdirSync("files");
   }
 
   try {
-    appendFileSync("files/log-output.txt", `${randomString}\n`);
+    writeFileSync("files/log-output.txt", `${randomString}\n`);
   } catch (err) {
     console.error(err);
   }
@@ -33,10 +33,10 @@ function readLogOutputFileToString() {
   }
 }
 
-appendRandomStringToFile(createRandomStringWithTimestamp());
+writeRandomStringToFile(createRandomStringWithTimestamp());
 console.log(readLogOutputFileToString());
 
 setInterval(() => {
-  appendRandomStringToFile(createRandomStringWithTimestamp());
+  writeRandomStringToFile(createRandomStringWithTimestamp());
   console.log(readLogOutputFileToString());
 }, 5000);
