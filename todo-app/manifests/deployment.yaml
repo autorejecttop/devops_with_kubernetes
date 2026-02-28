@@ -12,9 +12,17 @@ spec:
       labels:
         app: todo-app
     spec:
+      volumes:
+        - name: todo-app-pv
+          persistentVolumeClaim:
+            claimName: todo-app-claim
       containers:
         - name: todo-app
-          image: autorejecttop/todo-app:1.8
+          image: autorejecttop/todo-app:1.12
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: todo-app-pv
+              mountPath: /usr/src/app/files
           env:
             - name: PORT
               value: "3000"
