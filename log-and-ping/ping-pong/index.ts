@@ -13,6 +13,17 @@ const server = Bun.serve({
 
       return response;
     },
+    "/pings": async () => {
+      const file = Bun.file("files/ping-pong.txt");
+
+      const counter = (await file.exists()) ? parseInt(await file.text()) : 1;
+
+      const updatedCounter = counter + 1;
+
+      Bun.write("files/ping-pong.txt", updatedCounter.toString());
+
+      return new Response(updatedCounter.toString());
+    },
   },
 });
 

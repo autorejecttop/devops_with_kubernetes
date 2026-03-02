@@ -18,7 +18,7 @@ spec:
             claimName: log-and-ping-claim
       containers:
         - name: ping-pong
-          image: autorejecttop/ping-pong:1.11
+          image: autorejecttop/ping-pong:2.1
           imagePullPolicy: Always
           volumeMounts:
             - name: log-and-ping-pv

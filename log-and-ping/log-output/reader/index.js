@@ -25,14 +25,14 @@ function readPingPongFileToString() {
   }
 }
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
   const logOutputFileContent = readLogOutputFileToString();
-  const pingPongFileContent = readPingPongFileToString();
+  // const pingPongFileContent = readPingPongFileToString();
+  const pongResponse = await fetch("http://ping-pong:3456/pings");
+  const pongCounter = await pongResponse.text();
 
   const outputString =
-    logOutputFileContent +
-    "<br>" +
-    `Ping / Pongs: ${pingPongFileContent != "" ? pingPongFileContent : 0}`;
+    logOutputFileContent + "<br>" + `Ping / Pongs: ${pongCounter}`;
 
   res.send(outputString);
 });
