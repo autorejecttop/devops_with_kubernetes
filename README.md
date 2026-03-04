@@ -21,3 +21,4 @@
 ### Chapter 3
 
 - [2.1.](https://github.com/autorejecttop/devops_with_kubernetes/tree/2.1/log-and-ping)
+- [2.2.](https://github.com/autorejecttop/devops_with_kubernetes/tree/2.2/todo-app)

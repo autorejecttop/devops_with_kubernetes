@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-app-frontend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-app-frontend-deployment
+  template:
+    metadata:
+      labels:
+        app: todo-app-frontend-deployment
+    spec:
+      # volumes:
+      #   - name: todo-app-pv
+      #     persistentVolumeClaim:
+      #       claimName: todo-app-claim
+      containers:
+        - name: todo-app
+          image: autorejecttop/todo-app-frontend:2.2
+          imagePullPolicy: Always
+          # volumeMounts:
+          #   - name: todo-app-pv
+          #     mountPath: /usr/src/app/files
+          env:
+            - name: PORT
+              value: "3000"

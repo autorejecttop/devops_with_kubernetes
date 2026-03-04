@@ -1,6 +1,6 @@
 # use the official Bun image
 # see all versions at https://hub.docker.com/r/oven/bun/tags
-FROM oven/bun:1.3.9-alpine AS base
+FROM oven/bun:1.3.10-alpine AS base
 WORKDIR /usr/src/app
 
 # install dependencies into temp directory
@@ -24,16 +24,16 @@ COPY . .
 # [optional] tests & build
 ENV NODE_ENV=production
 # RUN bun test
-# RUN bun run build
+RUN bun run build
 
 # copy production dependencies and source code into final image
 FROM base AS release
-COPY --from=install /temp/prod/node_modules node_modules
-COPY --from=prerelease /usr/src/app/index.ts .
-COPY --from=prerelease /usr/src/app/index.html .
-COPY --from=prerelease /usr/src/app/package.json .
+COPY --from=prerelease /usr/src/app/server .
+COPY --from=prerelease /usr/src/app/index.js.map .
+COPY --from=prerelease /usr/src/app/meta.json .
+COPY --from=prerelease /usr/src/app/meta.md .
 
 # run the app
-# USER bun
+USER bun
 EXPOSE 3000/tcp
-ENTRYPOINT [ "bun", "run", "index.ts" ]
+ENTRYPOINT [ "./server" ]

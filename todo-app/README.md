@@ -1,22 +1,28 @@
-# todo-app
+# Todo App
 
-## Exercise 1.13
+## Exercise 2.2
 
-Continuing from exercise 1.12:
+_this shouldn't have taken me a long time to complete, but it is what it is_
 
-I modified `index.html` to meet the exercise specification
+I refactored the structure of the project
 
-I then built and pushed the image using:
+I then created the backend as specified
+
+I ran:
 
 ```bash
-docker build -t autorejecttop/todo-app:1.13 .
-docker push autorejecttop/todo-app:1.13
+docker build -t autorejecttop/todo-app-backend:2.2 ./todo-app-backend
+docker build -t autorejecttop/todo-app-frontend:2.2 ./todo-app-frontend
+
+docker push autorejecttop/todo-app-backend:2.2
+docker push autorejecttop/todo-app-frontend:2.2
 ```
 
-After that, I modified `manifests/deployment.yaml` to use the 1.13 version
+I created it's respective manifest files and modified the previous ones to challenge myself into building the mental model for Deployment, Service, and Ingress
 
 Lastly, I ran:
 
 ```bash
-kubectl apply -f manifests/deployment.yaml
+kubectl apply -f ./manifests/backend/
+kubectl apply -f ./manifests/frontend/
 ```
