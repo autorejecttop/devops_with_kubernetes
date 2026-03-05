@@ -1,28 +1,16 @@
 # Todo App
 
-## Exercise 2.2
+## Exercise 2.4
 
-_this shouldn't have taken me a long time to complete, but it is what it is_
+I stopped all running resources
 
-I refactored the structure of the project
+Just like in exercise 2.3, I created `manifests/namespace.yaml` with the namespace `project`
 
-I then created the backend as specified
+I applied it to the metadata on all the `.yaml` files inside of `./manifests`
 
-I ran:
-
-```bash
-docker build -t autorejecttop/todo-app-backend:2.2 ./todo-app-backend
-docker build -t autorejecttop/todo-app-frontend:2.2 ./todo-app-frontend
-
-docker push autorejecttop/todo-app-backend:2.2
-docker push autorejecttop/todo-app-frontend:2.2
-```
-
-I created it's respective manifest files and modified the previous ones to challenge myself into building the mental model for Deployment, Service, and Ingress
-
-Lastly, I ran:
+I then ran:
 
 ```bash
-kubectl apply -f ./manifests/backend/
-kubectl apply -f ./manifests/frontend/
+kubectl apply -f ./manifests/backend
+kubectl apply -f ./manifests/frontend
 ```
