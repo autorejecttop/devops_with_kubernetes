@@ -1,27 +1,33 @@
 # Log Output and Ping Pong App
 
-## Exercise 2.1
+## Exercise 2.3
 
-Continuing from exercise 1.11
+Continuing from exercise 2.1
 
-I modified the code of `ping-pong` to serve `/pings` so it returns the number of pings
+I deleted all resources currently running
 
-I modified the code of `log-output-reader` to read pings by fetching `http://ping-pong:3456/pings`
+I created `./manifests/namespace.yaml` to define the namespace `exercises`
 
-I then built and pushed the images using:
+I then ran:
 
 ```bash
-docker build -t autorejecttop/log-output-reader:2.1 log-output/reader/
-docker build -t autorejecttop/ping-pong:2.1 ping-pong/
-
-docker push autorejecttop/log-output-reader:2.1
-docker push autorejecttop/ping-pong:2.1
+kubectl apply -f ./manifests/namespace.yaml
 ```
 
-I stil have the volumes attached, but it's for the individual programs, they do not read each other's files. Lastly, I ran:
+Next, I modified all of `*.yaml` in `./manifests/` to use the namespace, for example:
+
+```yaml
+# ...
+metadata:
+  name: <abc>
+  namespace: exercises
+# ...
+```
+
+Lastly, I ran all the `.yaml` files in `./manifests/` using:
 
 ```bash
-kubectl apply -f manifests/volumes/
-kubectl apply -f manifests/ping-pong/
-kubectl apply -f manifests/log-output/
+kubectl apply -f ./manifests/volumes/
+kubectl apply -f ./manifests/log-output/
+kubectl apply -f ./manifests/ping-pong/
 ```
