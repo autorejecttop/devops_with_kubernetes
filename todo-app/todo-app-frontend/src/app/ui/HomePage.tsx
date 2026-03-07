@@ -1,7 +1,10 @@
 import { FC } from "hono/jsx";
 import { Todo } from "../../types";
 
-export const HomePage: FC<{ todos: Todo[] }> = (props: { todos: Todo[] }) => {
+export const HomePage: FC<{ todos: Todo[]; imageUrl: string }> = (props: {
+  todos: Todo[];
+  imageUrl: string;
+}) => {
   return (
     <>
       <html lang="en">
@@ -16,7 +19,7 @@ export const HomePage: FC<{ todos: Todo[] }> = (props: { todos: Todo[] }) => {
         <body>
           <h1>The project App</h1>
           <img
-            src="/files/image.jpg"
+            src={props.imageUrl}
             width="300"
             height="300"
             alt="Random Image"

@@ -13,17 +13,28 @@ spec:
       labels:
         app: todo-app-frontend-deployment
     spec:
-      # volumes:
-      #   - name: todo-app-pv
-      #     persistentVolumeClaim:
-      #       claimName: todo-app-claim
       containers:
         - name: todo-app
-          image: autorejecttop/todo-app-frontend:2.2
+          image: autorejecttop/todo-app-frontend:2.6
           imagePullPolicy: Always
-          # volumeMounts:
-          #   - name: todo-app-pv
-          #     mountPath: /usr/src/app/files
           env:
             - name: PORT
-              value: "3000"
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-app-configmap
+                  key: frontend_container_port
+            - name: IMAGE_FILE_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-app-configmap
+                  key: image_file_path
+            - name: IMAGE_FETCH_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-app-configmap
+                  key: image_fetch_path
+            - name: BACKEND_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-app-configmap
+                  key: backend_service_url

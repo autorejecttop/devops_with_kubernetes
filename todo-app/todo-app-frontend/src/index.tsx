@@ -5,13 +5,13 @@ import { html } from "hono/html";
 
 const app = new Hono();
 
-app.get("/files/image.jpg", (c) => {
-  return new Response(Bun.file("./files/image.jpg"));
+app.get(`/${process.env.IMAGE_FILE_PATH}`, (c) => {
+  return new Response(Bun.file(`./${process.env.IMAGE_FILE_PATH}`));
 });
 
 app.get("/", async (c) => {
-  const imageFilePath = "files/image.jpg";
-  const imageFetchPath = "https://picsum.photos/1200";
+  const imageFilePath = process.env.IMAGE_FILE_PATH!; // MUST EXISTS, FAILS IF IT DOESN'T
+  const imageFetchPath = process.env.IMAGE_FETCH_PATH!; // MUST EXISTS, FAILS IF IT DOESN'T
   const maxImageDurationInMicroSeconds = 600000;
 
   const fileInDir = Bun.file(imageFilePath);
@@ -25,12 +25,12 @@ app.get("/", async (c) => {
   }
 
   const todos: Todo[] = await (
-    await fetch("http://todo-app-backend-service:2345/todos")
+    await fetch(`${process.env.BACKEND_SERVICE_URL}/todos`)
   ).json();
 
   return c.html(
     html` <!DOCTYPE html>
-      ${(<HomePage todos={todos} />)}`,
+      ${(<HomePage todos={todos} imageUrl={`/${imageFilePath}`} />)}`,
   );
 });
 
@@ -38,7 +38,7 @@ app.post("/", async (c) => {
   const formData = await c.req.formData();
   const newTodoTitle = formData.get("newTodoTitle");
 
-  await fetch("http://todo-app-backend-service:2345/todos", {
+  await fetch(`${process.env.BACKEND_SERVICE_URL}/todos`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -51,4 +51,7 @@ app.post("/", async (c) => {
   return c.redirect("/");
 });
 
-export default app;
+export default {
+  port: process.env.PORT ?? 3000,
+  fetch: app.fetch,
+};

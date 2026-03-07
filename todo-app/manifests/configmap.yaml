@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: todo-app-configmap
+  namespace: project
+data:
+  image_file_path: files/image.jpg
+  image_fetch_path: https://picsum.photos/1200
+  backend_service_url: http://todo-app-backend-service:2345
+  backend_container_port: "3000"
+  frontend_container_port: "3000"

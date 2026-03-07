@@ -1,16 +1,28 @@
 # Todo App
 
-## Exercise 2.4
+## Exercise 2.6
+
+Continuing from exercise 2.4
 
 I stopped all running resources
 
-Just like in exercise 2.3, I created `manifests/namespace.yaml` with the namespace `project`
+I created the configmap in `./manifests/configmap.yaml`
 
-I applied it to the metadata on all the `.yaml` files inside of `./manifests`
+I then looked for and modified all the hard-coded URLs in the program and made their respecitve variable in `./manifests/configmap.yaml`
 
-I then ran:
+`./todo-app-frontend` is the only one that changed so I ran:
 
 ```bash
-kubectl apply -f ./manifests/backend
-kubectl apply -f ./manifests/frontend
+docker build -t autorejecttop/todo-app-frontend:2.6 ./todo-app-frontend
+docker push autorejecttop/todo-app-frontend:2.6
+```
+
+Lastly, I ran:
+
+```bash
+kubectl apply -f ./manifests/namespace.yaml
+
+for i in $(ls ./manifests/); do
+    kubectl apply -f ./manifests/$i;
+done
 ```
