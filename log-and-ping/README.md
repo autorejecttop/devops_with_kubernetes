@@ -1,33 +1,28 @@
 # Log Output and Ping Pong App
 
-## Exercise 2.3
+## Exercise 2.5
 
-Continuing from exercise 2.1
+Continuing from exercise 2.3
 
 I deleted all resources currently running
 
-I created `./manifests/namespace.yaml` to define the namespace `exercises`
+I created `./manifests/configmap.yaml` to have an env variable and a file.
 
-I then ran:
+I mount the ConfigMap volume in `./manifests/log-output/deployment.yaml`
 
-```bash
-kubectl apply -f ./manifests/namespace.yaml
-```
+I then modified the code in `./log-output/reader/index.js` to read the file content and the environment variable
 
-Next, I modified all of `*.yaml` in `./manifests/` to use the namespace, for example:
-
-```yaml
-# ...
-metadata:
-  name: <abc>
-  namespace: exercises
-# ...
-```
-
-Lastly, I ran all the `.yaml` files in `./manifests/` using:
+I built and pushed the image for reader using:
 
 ```bash
-kubectl apply -f ./manifests/volumes/
-kubectl apply -f ./manifests/log-output/
-kubectl apply -f ./manifests/ping-pong/
+docker build -t autorejecttop/log-output-reader:2.5 ./log-output/reader/
+docker push autorejecttop/log-output-reader:2.5
+```
+
+I then applied all the resources using:
+
+```bash
+for i in $(ls ./manifests); do
+  kubectl apply -f $i;
+done
 ```

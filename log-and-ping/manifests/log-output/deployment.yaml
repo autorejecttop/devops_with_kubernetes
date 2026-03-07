@@ -17,6 +17,12 @@ spec:
         - name: log-and-ping-pv
           persistentVolumeClaim:
             claimName: log-and-ping-claim
+        - name: log-and-ping-configmap
+          configMap:
+            name: log-and-ping-configmap
+            items:
+              - key: "information.txt"
+                path: "information.txt"
       containers:
         - name: log-output-generator
           image: autorejecttop/log-output-generator:1.11
@@ -25,11 +31,19 @@ spec:
             - name: log-and-ping-pv
               mountPath: /usr/src/app/files
         - name: log-output-reader
-          image: autorejecttop/log-output-reader:2.1
+          image: autorejecttop/log-output-reader:2.5
           imagePullPolicy: Always
           volumeMounts:
             - name: log-and-ping-pv
               mountPath: /usr/src/app/files
+            - name: log-and-ping-configmap
+              mountPath: /usr/src/app/config
+              readOnly: true
           env:
             - name: PORT
               value: "3000"
+            - name: MESSAGE # this is the key given to the container
+              valueFrom:
+                configMapKeyRef:
+                  name: log-and-ping-configmap
+                  key: message # this is the key from the ConfigMap
