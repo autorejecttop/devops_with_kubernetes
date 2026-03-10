@@ -7,3 +7,7 @@ data:
   message: hello world
   information.txt: |
     this text is from file
+  postgres_hostname: 'ping-pong-postgres-service'
+  postgres_port: "5432"
+  postgres_database: postgres
+  postgres_username: postgres

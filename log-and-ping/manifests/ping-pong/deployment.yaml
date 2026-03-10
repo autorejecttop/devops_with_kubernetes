@@ -19,7 +19,7 @@ spec:
             claimName: log-and-ping-claim
       containers:
         - name: ping-pong
-          image: autorejecttop/ping-pong:2.1
+          image: autorejecttop/ping-pong:2.7
           imagePullPolicy: Always
           volumeMounts:
             - name: log-and-ping-pv
@@ -27,3 +27,28 @@ spec:
           env:
             - name: PORT
               value: "3000"
+            - name: POSTGRES_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: log-and-ping-configmap
+                  key: postgres_hostname
+            - name: POSTGRES_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: log-and-ping-configmap
+                  key: postgres_port
+            - name: POSTGRES_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: log-and-ping-configmap
+                  key: postgres_database
+            - name: POSTGRES_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: log-and-ping-configmap
+                  key: postgres_username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ping-pong-postgres-secret
+                  key: postgres_password

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: exercises
+  name: ping-pong-postgres-statefulset
+spec:
+  serviceName: ping-pong-postgres-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ping-pong-postgres-app
+  template:
+    metadata:
+      labels:
+        app: ping-pong-postgres-app
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:18.3-alpine3.23
+          ports:
+            - name: db
+              containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ping-pong-postgres-secret
+                  key: postgres_password
