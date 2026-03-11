@@ -1,37 +1,42 @@
-import { randomUUIDv7 } from "bun";
+import { randomUUIDv7, SQL } from "bun";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 
+const pg = new SQL({
+  hostname: process.env.POSTGRES_HOSTNAME,
+  port: process.env.POSTGRES_PORT,
+  database: process.env.POSTGRES_DATABASE,
+  username: process.env.POSTGRES_USERNAME,
+  password: process.env.POSTGRES_PASSWORD,
+});
+
+(async () => {
+  await pg`DROP TABLE IF EXISTS todos;`;
+  await pg`CREATE TABLE todos (
+    todo_id UUID PRIMARY KEY DEFAULT uuidv7(),
+    title TEXT NOT NULL
+  );`;
+
+  await pg`INSERT INTO todos (title) VALUES ('Learn JavaScript'), ('Learn React'), ('Build a project');`;
+})();
+
 const app = new Hono();
-
-export interface Todo {
-  id: string;
-  title: string;
-}
-
-let todos: Todo[] = [
-  { id: "019cb40b-84cc-7000-bc1c-8bfb2320dec2", title: "Learn JavaScript" },
-  { id: "019cb40b-84cc-7001-94fe-ff3cebdef3ad", title: "Learn React" },
-  { id: "019cb40b-84cc-7002-9059-886e663050f1", title: "Build a project" },
-];
 
 app.use("*", cors());
 
-app.get("/todos", (c) => {
-  return c.json(todos);
+app.get("/todos", async (c) => {
+  const rows = await pg`SELECT * FROM todos`;
+
+  return c.json(rows);
 });
 
 app.post("/todos", async (c) => {
-  const newTodoTitle = (await c.req.json()) as { title: string };
+  const newTodo = (await c.req.json()) as { title: string };
 
-  const newTodo = {
-    id: randomUUIDv7(),
-    title: newTodoTitle.title,
-  };
+  const [savedTodo] =
+    await pg`INSERT INTO todos (title) VALUES (${newTodo.title}) RETURNING *`;
 
-  todos = todos.concat(newTodo);
-
-  return c.json(newTodo);
+  return c.json(savedTodo);
 });
 
 export default {

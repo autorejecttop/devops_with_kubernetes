@@ -1,28 +1,42 @@
 # Todo App
 
-## Exercise 2.6
+## Exercise 2.8
 
-Continuing from exercise 2.4
+Continuing from exercise 2.6
 
-I stopped all running resources
+I deleted all running resources
 
-I created the configmap in `./manifests/configmap.yaml`
+I added the database logic in `./todo-app-backend/src/index.ts`
 
-I then looked for and modified all the hard-coded URLs in the program and made their respecitve variable in `./manifests/configmap.yaml`
+I then created the headless service for the postgres database in `./manifests/backend/postgres-service.yaml`
 
-`./todo-app-frontend` is the only one that changed so I ran:
+I created the secret file for postgres password and encrypted it into `./manifests/backend/postgres-secret.enc.yaml`
+
+After that, I created the postgres Stateful Set with the secret database password environment variable in `./manifests/backend/postgres-statefulset.yaml`
+
+Next, I modified `./manifests/backend/deployment.yaml` to use all the needed environment variable from `./configmap.yaml` and `./manifests/backend/postgres-secret.enc.yaml`
+
+I then built and pushed the new backend app using:
 
 ```bash
-docker build -t autorejecttop/todo-app-frontend:2.6 ./todo-app-frontend
-docker push autorejecttop/todo-app-frontend:2.6
+docker build -t autorejecttop/todo-app-backend:2.8 ./todo-app-backend
+docker push autorejecttop/todo-app-backend:2.8
 ```
+
+After that, I modified the `./manifests/backend/deployment.yaml` to use the newest image (2.8)
 
 Lastly, I ran:
 
 ```bash
 kubectl apply -f ./manifests/namespace.yaml
+kubectl apply -f ./manifests/configmap.yaml
+kubectl apply -f ./manifests/frontend/
 
-for i in $(ls ./manifests/); do
-    kubectl apply -f ./manifests/$i;
-done
+SOPS_AGE_KEY_FILE=./manifests/backend/key.txt sops --decrypt ./manifests/backend/postgres-secret.enc.yaml | kubectl apply -f -
+
+kubectl apply -f ./manifests/backend/postgres-service.yaml
+kubectl apply -f ./manifests/backend/postgres-statefulset.yaml
+kubectl apply -f ./manifests/backend/ingress.yaml
+kubectl apply -f ./manifests/backend/service.yaml
+kubectl apply -f ./manifests/backend/deployment.yaml
 ```

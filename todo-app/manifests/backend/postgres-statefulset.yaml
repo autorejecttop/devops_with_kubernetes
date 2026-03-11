@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: project
+  name: todo-app-backend-postgres-statefulset
+spec:
+  serviceName: todo-app-backend-postgres-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-app-backend-postgres-app
+  template:
+    metadata:
+      labels:
+        app: todo-app-backend-postgres-app
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:18.3-alpine3.23
+          ports:
+            - name: db
+              containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: todo-app-backend-postgres-secret
+                  key: postgres_password

@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: todo-app
-          image: autorejecttop/todo-app-backend:2.2
+          image: autorejecttop/todo-app-backend:2.8
           imagePullPolicy: Always
           env:
             - name: PORT
@@ -23,3 +23,28 @@ spec:
                 configMapKeyRef:
                   name: todo-app-configmap
                   key: backend_container_port
+            - name: POSTGRES_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-app-configmap
+                  key: postgres_hostname
+            - name: POSTGRES_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-app-configmap
+                  key: postgres_port
+            - name: POSTGRES_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-app-configmap
+                  key: postgres_database
+            - name: POSTGRES_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-app-configmap
+                  key: postgres_username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: todo-app-backend-postgres-secret
+                  key: postgres_password

@@ -9,3 +9,7 @@ data:
   backend_service_url: http://todo-app-backend-service:2345
   backend_container_port: "3000"
   frontend_container_port: "3000"
+  postgres_hostname: todo-app-backend-postgres-service
+  postgres_port: "5432"
+  postgres_database: postgres
+  postgres_username: postgres
