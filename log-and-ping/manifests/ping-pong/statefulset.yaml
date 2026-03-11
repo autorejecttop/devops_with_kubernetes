@@ -15,8 +15,11 @@ spec:
         app: ping-pong-postgres-app
     spec:
       containers:
-        - name: postgres
+        - name: ping-pong-postgres-app
           image: postgres:18.3-alpine3.23
+          volumeMounts:
+            - name: ping-pong-postgres-volume
+              mountPath: /var/lib/postgresql
           ports:
             - name: db
               containerPort: 5432
@@ -26,3 +29,13 @@ spec:
                 secretKeyRef:
                   name: ping-pong-postgres-secret
                   key: postgres_password
+  volumeClaimTemplates:
+    - metadata:
+        namespace: exercises
+        name: ping-pong-postgres-volume
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: local-path
+        resources:
+          requests:
+            storage: 100Mi

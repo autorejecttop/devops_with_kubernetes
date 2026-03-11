@@ -8,14 +8,12 @@ const pg = new SQL({
   password: process.env.POSTGRES_PASSWORD,
 });
 
-await pg`DROP TABLE IF EXISTS counter;`;
-
-await pg`CREATE TABLE counter (
+await pg`CREATE TABLE IF NOT EXISTS counter (
   counter_id SERIAL PRIMARY KEY,
   counter INT NOT NULL
 );`;
 
-await pg`INSERT INTO counter(counter) VALUES(0)`;
+await pg`INSERT INTO counter(counter) SELECT 0 WHERE NOT EXISTS (SELECT 1 FROM counter WHERE counter_id = 1)`;
 
 const server = Bun.serve({
   port: process.env.PORT ?? 8080,

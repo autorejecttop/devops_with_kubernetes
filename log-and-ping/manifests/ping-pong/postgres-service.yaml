@@ -4,7 +4,7 @@ metadata:
   namespace: exercises
   name: ping-pong-postgres-service
   labels:
-    app: ping-pong-postgres
+    app: ping-pong-postgres-app
 spec:
   ports:
     - port: 5432
