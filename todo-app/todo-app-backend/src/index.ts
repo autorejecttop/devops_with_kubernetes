@@ -11,13 +11,14 @@ const pg = new SQL({
 });
 
 (async () => {
-  await pg`DROP TABLE IF EXISTS todos;`;
-  await pg`CREATE TABLE todos (
+  await pg`CREATE TABLE IF NOT EXISTS todos (
     todo_id UUID PRIMARY KEY DEFAULT uuidv7(),
     title TEXT NOT NULL
   );`;
 
-  await pg`INSERT INTO todos (title) VALUES ('Learn JavaScript'), ('Learn React'), ('Build a project');`;
+  await pg`INSERT INTO todos (title) SELECT 'Learn JavaScript' WHERE NOT EXISTS (SELECT 1 FROM todos WHERE title = 'Learn JavaScript');`;
+  await pg`INSERT INTO todos (title) SELECT 'Learn React' WHERE NOT EXISTS (SELECT 1 FROM todos WHERE title = 'Learn React');`;
+  await pg`INSERT INTO todos (title) SELECT 'Build a project' WHERE NOT EXISTS (SELECT 1 FROM todos WHERE title = 'Build a project');`;
 })();
 
 const app = new Hono();

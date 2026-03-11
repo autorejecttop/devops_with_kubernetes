@@ -17,6 +17,9 @@ spec:
       containers:
         - name: postgres
           image: postgres:18.3-alpine3.23
+          volumeMounts:
+            - name: todo-app-backend-postgres-volume
+              mountPath: /var/lib/postgresql
           ports:
             - name: db
               containerPort: 5432
@@ -26,3 +29,13 @@ spec:
                 secretKeyRef:
                   name: todo-app-backend-postgres-secret
                   key: postgres_password
+  volumeClaimTemplates:
+    - metadata:
+        namespace: project
+        name: todo-app-backend-postgres-volume
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: local-path
+        resources:
+          requests:
+            storage: 100Mi
