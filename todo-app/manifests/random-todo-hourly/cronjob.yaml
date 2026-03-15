@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  namespace: project
+  name: random-todo-hourly
+spec:
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: random-todo-hourly
+              image: autorejecttop/random-todo-hourly:2.9
+              imagePullPolicy: Always
+              env:
+                - name: BACKEND_SERVICE_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: todo-app-configmap
+                      key: backend_service_url
+          restartPolicy: Never
