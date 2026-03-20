@@ -1,6 +1,7 @@
 import { randomUUIDv7, SQL } from "bun";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import { logger } from "hono/logger";
 
 const pg = new SQL({
   hostname: process.env.POSTGRES_HOSTNAME,
@@ -23,6 +24,12 @@ const pg = new SQL({
 
 const app = new Hono();
 
+export const customLogger = (message: string, ...rest: string[]) => {
+  console.log(message, ...rest);
+};
+
+app.use(logger(customLogger));
+
 app.use("*", cors());
 
 app.get("/todos", async (c) => {
@@ -33,6 +40,15 @@ app.get("/todos", async (c) => {
 
 app.post("/todos", async (c) => {
   const newTodo = (await c.req.json()) as { title: string };
+
+  customLogger(`Incoming request for new todo with title: ${newTodo.title}`);
+
+  if (newTodo.title.length > 140) {
+    customLogger(
+      `Error: Title too long with ${newTodo.title.length} characters!`,
+    );
+    return c.json({ error: "too long" }, 400);
+  }
 
   const [savedTodo] =
     await pg`INSERT INTO todos (title) VALUES (${newTodo.title}) RETURNING *`;
